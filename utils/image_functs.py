@@ -6,7 +6,8 @@ def segment_image_with_coords(image_path,coord_list):
   xmin,xmax = min(x_list),max(x_list)
   ymin,ymax = min(y_list),max(y_list)
 
-  return image[xmin:xmax,ymin:ymax]
+  print(xmin,xmax,ymin,ymax)
+  return image[ymin:ymax,xmin:xmax]
 def open_image(image_path):
   from PIL import Image
   import numpy as np
