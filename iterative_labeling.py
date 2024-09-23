@@ -9,23 +9,30 @@ from Dataset_Generator.entities import DatasetGenerator
 if __name__ == '__main__':
     if len(st.session_state.keys()) == 0:
         init_session_values()
-    if 'coords' not in st.session_state:
-        st.session_state['coords']=[]
+        get_next_image()
     
     
     st.title('Hello Streamlit')
-    coords=streamlit_image_coordinates(st.session_state['current_image-label_pair'][0])
-    st.session_state['coords'].append(coords)
 
+    if st.button('Clear'):
+        st.session_state['coords']=[]
+        st.session_state['loaded_image']=Image.open(st.session_state['current_image-label_pair'][0])
+    
+    if st.button('Next Image'):
+        get_next_image()
+    coords=streamlit_image_coordinates(st.session_state['loaded_image'])
+    # print('coords:',coords)
+    if coords != None and coords not in st.session_state['coords']:
+        st.session_state['coords'].append(coords)
+        draw_pts_on_image()
+    # print(st.session_state["coords"])
 
     if 'coords' in st.session_state:
-        if len(st.session_state['coords']) > 4:
+        if len(st.session_state['coords']) >= 4:
+            #show coords sub-image
             print(st.session_state['coords'])
             st.image(segment_image_with_coords(st.session_state['current_image-label_pair'][0],st.session_state['coords']))
 
-    if st.button('Next Image'):
-        st.session_state['current_image-label_pair'] = next(st.session_state['generator'])
-        st.session_state['coords']=[]
-   
+    
 
     

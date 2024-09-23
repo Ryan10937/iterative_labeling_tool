@@ -1,3 +1,4 @@
+import numpy as np
 def segment_image_with_coords(image_path,coord_list):
   image = open_image(image_path)
   x_list = [d['x'] for d in coord_list if d != None]
