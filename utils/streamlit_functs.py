@@ -8,7 +8,6 @@ import numpy as np
 def init_session_values():
   # import sys
   config_path = 'C:\\Users\\ryan\OneDrive\\SchoolFiles\\CSCE\Graduate\\Side_Projects\\iterative_labeling\\iterative_labeling_tool\\Dataset_Generator\\configs\\iterative_labeling.yaml'
-  SCRIPT_DIR = os.path.abspath(config_path)
   st.session_state['generator'] = DatasetGenerator.Dataset_Generator(config_path).run_pipeline()
   st.session_state['current_image-label_pair'] = next(st.session_state['generator'])
   st.session_state['coords']=[]

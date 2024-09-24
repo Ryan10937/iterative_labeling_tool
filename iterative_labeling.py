@@ -33,6 +33,8 @@ if __name__ == '__main__':
             print(st.session_state['coords'])
             st.image(segment_image_with_coords(st.session_state['current_image-label_pair'][0],st.session_state['coords']))
 
+    st.text(st.session_state['current_image-label_pair'][1])
+
     
 
     
