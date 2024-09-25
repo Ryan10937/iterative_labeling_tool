@@ -14,7 +14,7 @@ def init_session_values():
 
 def get_next_image():
   st.session_state['current_image-label_pair'] = next(st.session_state['generator'])
-  st.session_state['loaded_image'] = Image.open(st.session_state['current_image-label_pair'][0])
+  st.session_state['loaded_image'] = Image.open(st.session_state['current_image-label_pair'].media_path)
   st.session_state['coords']=[]
 
 def draw_pts_on_image():

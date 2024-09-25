@@ -1,4 +1,5 @@
 import numpy as np
+from PIL import Image
 def segment_image_with_coords(image_path,coord_list):
   image = open_image(image_path)
   x_list = [d['x'] for d in coord_list if d != None]
@@ -10,6 +11,4 @@ def segment_image_with_coords(image_path,coord_list):
   print(xmin,xmax,ymin,ymax)
   return image[ymin:ymax,xmin:xmax]
 def open_image(image_path):
-  from PIL import Image
-  import numpy as np
   return np.array(Image.open(image_path))
