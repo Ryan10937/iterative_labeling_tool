@@ -38,6 +38,8 @@ if __name__ == '__main__':
     #####################################################################
     ######################### Label Coords ##############################
     coords=streamlit_image_coordinates(st.session_state['loaded_image'])
+    if st.session_state['current_image-label_pair'].value != None and st.session_state['has_drawn_existing']==False:
+        draw_existing_label_on_image()
     if coords != None and coords not in st.session_state['coords']:
         st.session_state['coords'].append(coords)
         draw_pts_on_image()
