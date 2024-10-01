@@ -1,2 +1,6 @@
 dataset/*
 *checkpoint*
+tmp*
+WILO.txt
+Dataset_Generator*
+*__pycache__*
