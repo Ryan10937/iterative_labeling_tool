@@ -4,11 +4,22 @@ import os
 import streamlit as st
 from PIL import Image, ImageDraw
 import numpy as np
-
+import yaml
+import utils.relabeling_functs as rfuncts
+import inspect
 def init_session_values():
   # import sys
-  config_path = 'C:\\Users\\ryan\OneDrive\\SchoolFiles\\CSCE\Graduate\\Side_Projects\\iterative_labeling\\iterative_labeling_tool\\Dataset_Generator\\configs\\iterative_labeling.yaml'
-  st.session_state['generator'] = DatasetGenerator.Dataset_Generator(config_path).run_pipeline()
+  def open_config(config_path):
+    with open(config_path) as f:
+      try:
+          config = yaml.safe_load(f)
+      except yaml.YAMLError as exc:
+          print(exc)
+          return None
+    return config
+  st.session_state['config'] = open_config('configs/fashion_segmentation.yaml')#this path will need to be args
+  dataset_config_path = st.session_state['config']['dataset_generator_config_path']
+  st.session_state['generator'] = DatasetGenerator.Dataset_Generator(dataset_config_path).run_pipeline()
   st.session_state['current_image-label_pair'] = next(st.session_state['generator'])
   st.session_state['coords']=[]
 
@@ -40,6 +51,10 @@ def draw_existing_label_on_image():
     return [(coords['x']-width//2,coords['y']-height//2),(coords['x']+width//2,coords['y']+height//2)]
   draw = ImageDraw.Draw(st.session_state['loaded_image'])
   label = st.session_state['current_image-label_pair'].value
+  if label == None:
+    return
+  else:
+    print('label in draw_existing',label)
   for coords in [{'x':label['xmin'],'y':label['ymin']},
                  {'x':label['xmin'],'y':label['ymax']},
                  {'x':label['xmax'],'y':label['ymin']},
@@ -49,3 +64,8 @@ def draw_existing_label_on_image():
   st.session_state['has_drawn_existing']=True
   st.rerun()
   
+
+def save_label(image_label_pair,new_label):
+   functions = inspect.getmembers(rfuncts,inspect.isfunction)
+   save_label_function = [y for x,y in functions if x==st.session_state['config']['label_saving_function']][0]
+   save_label_function(image_label_pair,new_label)

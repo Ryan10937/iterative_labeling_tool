@@ -7,7 +7,7 @@ import sys
 import os
 from Dataset_Generator.entities import DatasetGenerator
 if __name__ == '__main__':
-    st.title('Hello Streamlit')
+    st.title('Iterative Labeling')
 
     #####################################################################
     #################### Initialize values ##############################
@@ -16,23 +16,20 @@ if __name__ == '__main__':
         get_next_image()
     #####################################################################
     
-    
-
-
     #####################################################################
     ########################### Buttons #################################
     with st.sidebar:
         if st.button('Next Image'):
             get_next_image()
 
-        if st.button('Submit Edit label'):
-            coord_list_to_fashion_xml(st.session_state['current_image-label_pair'],st.session_state['coords'])
+        if st.button('Submit label'):
+            save_label(st.session_state['current_image-label_pair'],st.session_state['coords'])
 
         if st.button('Clear'):
             st.session_state['coords']=[]
             st.session_state['loaded_image']=Image.open(st.session_state['current_image-label_pair'].media_path)
+            draw_existing_label_on_image()
     #####################################################################
-    
     
 
     #####################################################################
