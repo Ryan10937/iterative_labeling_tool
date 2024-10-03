@@ -1,5 +1,5 @@
 
-from Dataset_Generator.entities import DatasetGenerator#need to use setuptools to add this to path
+from Dataset_Generator.entities import DatasetGenerator,ConfigReader#need to use setuptools to add this to path
 import os
 import streamlit as st
 from PIL import Image, ImageDraw
@@ -17,8 +17,9 @@ def init_session_values():
           print(exc)
           return None
     return config
-  st.session_state['config'] = open_config('configs/fashion_segmentation.yaml')#this path will need to be args
+  st.session_state['config'] = open_config('configs/config.yaml')#this path will need to be args
   dataset_config_path = st.session_state['config']['dataset_generator_config_path']
+  st.session_state['data_generator_config'] = ConfigReader.Config_Reader(dataset_config_path).open_config()
   st.session_state['generator'] = DatasetGenerator.Dataset_Generator(dataset_config_path).run_pipeline()
   st.session_state['current_image-label_pair'] = next(st.session_state['generator'])
   st.session_state['coords']=[]

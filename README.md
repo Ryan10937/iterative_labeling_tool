@@ -4,10 +4,7 @@
 
 
 Roadmap:
-  Edit existing labels
-    Can edit and save
-    TODO
-      display existing label on image
+  Create New Dataset 
 
   Train model on dataset
     Select model architecture (or pretrained)

@@ -1,0 +1,2 @@
+dataset_generator_config_path: 'C:\\Users\\ryan\OneDrive\\SchoolFiles\\CSCE\Graduate\\Side_Projects\\iterative_labeling\\iterative_labeling_tool\\Dataset_Generator\\configs\\dataset.yaml'
+label_saving_function: coord_list_to_json
