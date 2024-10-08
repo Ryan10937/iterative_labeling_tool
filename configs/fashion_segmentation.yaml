@@ -1,2 +1,5 @@
-dataset_generator_config_path: 'C:\\Users\\ryan\OneDrive\\SchoolFiles\\CSCE\Graduate\\Side_Projects\\iterative_labeling\\iterative_labeling_tool\\Dataset_Generator\\configs\\iterative_labeling.yaml'
+# dataset_generator_config_path: 'C:/Users/ryan/OneDrive/SchoolFiles/CSCE/Graduate/Side_Projects/iterative_labeling/iterative_labeling_tool/Dataset_Generator/configs/iterative_labeling.yaml'
+dataset_generator_config_path: 'C:\\Users\\ryan\\OneDrive\\SchoolFiles\\CSCE\\Graduate\\Side_Projects\\iterative_labeling\\iterative_labeling_tool\\Dataset_Generator\\configs\\fashion_dataset.yaml'
 label_saving_function: coord_list_to_fashion_xml
+optimizer: 'adam'
+loss: 'binary_crossentropy'
