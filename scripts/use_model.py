@@ -20,10 +20,11 @@ class Model():
     self.generator = st.session_state['generator']
     self.batch_size = 8
     self.epochs = 5
+    self.image_size = (512,512)
 
   def compile_model(self):
     # def shallow_unet(input_shape=(None, 256, 512)):
-    def shallow_unet(input_shape=(512, 512, 1)):
+    def shallow_unet(input_shape=(self.image_size[0], self.image_size[1], 1)):
     # def shallow_unet(input_shape=(None, None, 3)):
       # Input layer that can take images of any size
       inputs = layers.Input(shape=input_shape)
@@ -87,8 +88,8 @@ class Model():
       #   bbox = json.load(f)
       bboxes = data_label.value
       # Ensure the image is at least 2D
-      height, width = imagesize.get(data_label.media_path)
-      
+      # height, width = imagesize.get(data_label.media_path)
+      height, width = (self.image_size[0],self.image_size[1])
       # Create an empty mask of zeros
       mask = np.zeros((height, width), dtype=np.uint8)
       for bbox in bboxes:
@@ -121,7 +122,7 @@ class Model():
 
     def open_image(image_path):
       from PIL import Image, ImageOps
-      im = ImageOps.grayscale(Image.open(image_path))
+      im = ImageOps.grayscale(Image.open(image_path).resize((self.image_size[0],self.image_size[1])))
       # im = Image.open(image_path)
       return np.expand_dims(np.array(im), axis=-1) 
     
@@ -135,6 +136,12 @@ class Model():
       # print(images)
       # print(len(images))
       # images=np.expand_dims(images,axis=-1)
+      # print(type(images))
+      # print(np.array(images).shape)
+
+      # print(type(masks))
+      # print(np.array(masks).shape)
+      images=np.expand_dims(images,axis=-1)
       masks=np.expand_dims(masks,axis=-1)
       if len(images) == 0 or len(masks) == 0:
         print('Empty batch')
