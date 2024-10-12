@@ -37,7 +37,6 @@ if __name__ == '__main__':
             save_label(st.session_state['current_image-label_pair'],st.session_state['coords'])
 
         if st.button('Clear'):
-            # st.session_state['coords']=[]
             st.session_state['coords']=[[]]
             st.session_state['loaded_image']=Image.open(st.session_state['current_image-label_pair'].media_path)
             draw_existing_label_on_image()

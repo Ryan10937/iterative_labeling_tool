@@ -1,6 +1,5 @@
 
 import streamlit as st
-
 from Dataset_Generator.entities import DatasetGenerator
 from Dataset_Generator.utils.transformation_functions import dataset_label 
 import tensorflow as tf 
@@ -11,6 +10,8 @@ from tensorflow.keras import layers, models
 import imagesize
 import json
 import pandas as pd
+from PIL import Image, ImageOps
+
 class Model():
   def __init__(self):
     self.optimizer = st.session_state['config']['optimizer']
@@ -68,8 +69,6 @@ class Model():
     # Create and compile the model
     self.model = shallow_unet()
     self.model.compile(optimizer=self.optimizer, loss=self.loss, metrics=[dice_coefficient,'accuracy'])
-    
-    # self.model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
   def create_mask(self,data_label: dataset_label):
       
@@ -112,6 +111,19 @@ class Model():
       return mask
 
   def run_model(self):
+
+    def make_k_folds_arr(list_length: int,n_folds: int,test_percent:float):
+      import random
+      #make an array the of list_length length, 
+      #assign a number to each index from 0 to n_folds
+      arr = [random.randint(0,n_folds) for _ in range(list_length)]
+      folds = []
+      #test set is 0, all others are train or val depending on the fold
+      for fold_num in range(0,n_folds+1):
+        # remapping_arr = {(x:'train') if fold_num != x else (x:'val') for x in range(1,n_folds+1)}
+        remapping_arr = ['test' if x == 0 else 'val' if fold_num == x else 'train' for x in range(0,n_folds+1)]
+        folds.append([[remapping_arr[x] for x in arr]])
+      return folds
     def batch_generator(generator, batch_size):
       while True:
         batch = list(islice(generator, batch_size))
@@ -121,7 +133,6 @@ class Model():
         yield batch
 
     def open_image(image_path):
-      from PIL import Image, ImageOps
       im = ImageOps.grayscale(Image.open(image_path).resize((self.image_size[0],self.image_size[1])))
       # im = Image.open(image_path)
       return np.expand_dims(np.array(im), axis=-1) 
@@ -133,16 +144,9 @@ class Model():
     for batch in batches:
       images = [open_image(data_label.media_path) for data_label in batch if is_not_none(data_label.media_path) and is_not_none(data_label.label_path)]
       masks = [self.create_mask(data_label) for data_label in batch if is_not_none(data_label.media_path) and is_not_none(data_label.label_path)]
-      # print(images)
-      # print(len(images))
-      # images=np.expand_dims(images,axis=-1)
-      # print(type(images))
-      # print(np.array(images).shape)
-
-      # print(type(masks))
-      # print(np.array(masks).shape)
       images=np.expand_dims(images,axis=-1)
       masks=np.expand_dims(masks,axis=-1)
+
       if len(images) == 0 or len(masks) == 0:
         print('Empty batch')
         continue
@@ -156,7 +160,5 @@ class Model():
       # for im,msk in zip(images,masks):
         # self.history = self.model.fit(x=[im],y=[msk],verbose=2,batch_size=len(images))
     self.evaluate_results = self.model.evaluate(first_batch['images'],first_batch['masks'])
-
-    print(self.history)
 
       
